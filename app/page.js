@@ -5,20 +5,22 @@ const page = () => {
   const [title, setTitle] = useState("");
   const [mainTask, setMainTask] = useState([]);
 
-  function handleTitle(e) {
+  function handleChange(e) {
     setTitle(e.target.value);
   }
 
   function handleSubmit(e) {
     e.preventDefault();
+    if (!title > 0) {
+      alert("Please Enter Some Task");
+      return;
+    }
     setMainTask([...mainTask, { title }]);
     setTitle("");
   }
 
-  function deleteHandler(i) {
-    let copyTask = [...mainTask];
-    copyTask.splice(i, 1);
-    setMainTask(copyTask);
+  function deleteHandler(index) {
+    setMainTask(mainTask.filter((_, i) => i !== index));
   }
 
   return (
@@ -34,34 +36,32 @@ const page = () => {
           type="text"
           placeholder="Enter Task Here"
           value={title}
-          onChange={handleTitle}
-          className="text-2xl border-zinc-800 border-2 p-2 m-5"
+          onChange={handleChange}
+          className="border-zinc-800 text-2xl  border-2 p-2 m-5"
         />
         <button className="bg-[#353535] hover:bg-black hover:border hover:border-black border border-black text-white text-xl p-3 font-bold rounded m-5">
           Add Task
         </button>
       </form>
-      <hr />
       <div className="p-8 bg-slate-200">
         {mainTask.length === 0 ? (
-          <h2 className="text-center">No Task Available</h2>
+          <h2 className="text-center text-2xl">No Task Available!</h2>
         ) : (
-          <ul className="flex flex-col gap-4">
-            {mainTask.map((v, i) => (
-              <li key={i} className="flex justify-between">
-                <div className="text-3xl font-bold">{v.title}</div>
-
+          <div className="flex flex-col gap-4">
+            {mainTask.map((items, index) => (
+              <ol key={index} className="flex justify-between">
+                <li className="text-2xl">{items.title}</li>
                 <button
                   onClick={() => {
-                    deleteHandler(i);
+                    deleteHandler(index);
                   }}
-                  className="bg-red-500 text-white px-4 py-2 rounded font-semibold"
+                  className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded font-semibold"
                 >
                   Delete
                 </button>
-              </li>
+              </ol>
             ))}
-          </ul>
+          </div>
         )}
       </div>
     </>
