@@ -1,9 +1,17 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const page = () => {
+  const localStorageKey = "mainTask";
+
   const [title, setTitle] = useState("");
-  const [mainTask, setMainTask] = useState([]);
+  const [mainTask, setMainTask] = useState(() => {
+    return JSON.parse(localStorage.getItem(localStorageKey) || []);
+  });
+
+  useEffect(() => {
+    localStorage.setItem(localStorageKey, JSON.stringify(mainTask));
+  });
 
   function handleChange(e) {
     setTitle(e.target.value);
@@ -49,7 +57,7 @@ const page = () => {
         ) : (
           <div className="flex flex-col gap-4">
             {mainTask.map((items, index) => (
-              <ol key={index} className="flex justify-between">
+              <ol key={index} className="flex justify-between px-20">
                 <li className="text-2xl">{items.title}</li>
                 <button
                   onClick={() => {
